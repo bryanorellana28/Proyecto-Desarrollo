@@ -1,54 +1,67 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/*
-| -------------------------------------------------------------------------
-| URI ROUTING
-| -------------------------------------------------------------------------
-| This file lets you re-map URI requests to specific controller functions.
-|
-| Typically there is a one-to-one relationship between a URL string
-| and its corresponding controller class/method. The segments in a
-| URL normally follow this pattern:
-|
-|	example.com/class/method/id/
-|
-| In some instances, however, you may want to remap this relationship
-| so that a different class/function is called than the one
-| corresponding to the URL.
-|
-| Please see the user guide for complete details:
-|
-|	https://codeigniter.com/user_guide/general/routing.html
-|
-| -------------------------------------------------------------------------
-| RESERVED ROUTES
-| -------------------------------------------------------------------------
-|
-| There are three reserved routes:
-|
-|	$route['default_controller'] = 'welcome';
-|
-| This route indicates which controller class should be loaded if the
-| URI contains no data. In the above example, the "welcome" class
-| would be loaded.
-|
-|	$route['404_override'] = 'errors/page_missing';
-|
-| This route will tell the Router which controller/method to use if those
-| provided in the URL cannot be matched to a valid route.
-|
-|	$route['translate_uri_dashes'] = FALSE;
-|
-| This is not exactly a route, but allows you to automatically route
-| controller and method names that contain dashes. '-' isn't a valid
-| class or method name character, so it requires translation.
-| When you set this option to TRUE, it will replace ALL dashes in the
-| controller and method URI segments.
-|
-| Examples:	my-controller/index	-> my_controller/index
-|		my-controller/my-method	-> my_controller/my_method
-*/
-$route['default_controller'] = 'welcome';
+
+$route['default_controller'] = 'login';
+
+
+$route['login'] = 'login';
+$route['login/autenticar'] = 'login/autenticar';
+
+
+$route['salas'] = 'salas/index'; 
+$route['salas/create'] = 'salas/create';
+$route['salas/store'] = 'salas/store';
+$route['salas/edit/(:num)'] = 'salas/edit/$1';
+$route['salas/update/(:num)'] = 'salas/update/$1';
+$route['salas/delete/(:num)'] = 'salas/delete/$1';
+
+
+
+
+
+$route['clientes'] = 'clientes/index';
+$route['clientes/create'] = 'clientes/create';
+$route['clientes/store'] = 'clientes/store';
+$route['clientes/edit/(:num)'] = 'clientes/edit/$1';
+$route['clientes/update/(:num)'] = 'clientes/update/$1';
+$route['clientes/delete/(:num)'] = 'clientes/delete/$1';
+
+
+$route['usuarios'] = 'usuarios/index';
+$route['usuarios/create'] = 'usuarios/create';
+$route['usuarios/store'] = 'usuarios/store';
+$route['usuarios/edit/(:num)'] = 'usuarios/edit/$1';
+$route['usuarios/update/(:num)'] = 'usuarios/update/$1';
+$route['usuarios/delete/(:num)'] = 'usuarios/delete/$1';
+
+
+$route['paquetes'] = 'paquetes/index';
+$route['paquetes/create'] = 'paquetes/create';
+$route['paquetes/store'] = 'paquetes/store';
+$route['paquetes/edit/(:num)'] = 'paquetes/edit/$1';
+$route['paquetes/update/(:num)'] = 'paquetes/update/$1';
+$route['paquetes/delete/(:num)'] = 'paquetes/delete/$1';
+
+
+$route['estadisticas'] = 'estadisticas/index';
+
+
+
+$route['dashboard'] = 'dashboard/index';
+$route['dashboard/sala/(:num)'] = 'dashboard/sala/$1';
+$route['dashboard/iniciar_cronometro'] = 'dashboard/iniciar_cronometro';
+$route['dashboard/detener_cronometro'] = 'dashboard/detener_cronometro';
+
+
+
+
+$route['cronometro/iniciar'] = 'cronometro/iniciar';
+$route['dashboard'] = 'dashboard/index';
+
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+
+
