@@ -16,7 +16,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th><i class="fas fa-hashtag"></i> ID</th>
+          
                     <th><i class="fas fa-user"></i> Nombre</th>
                     <th><i class="fas fa-envelope"></i> Correo</th>
                     <th><i class="fas fa-cogs"></i> Acciones</th>
@@ -25,7 +25,7 @@
             <tbody>
                 <?php foreach ($clientes as $cliente): ?>
                 <tr>
-                    <td><?php echo $cliente['id']; ?></td>
+          
                     <td><?php echo $cliente['nombre']; ?></td>
                     <td><?php echo $cliente['correo']; ?></td>
                     <td>

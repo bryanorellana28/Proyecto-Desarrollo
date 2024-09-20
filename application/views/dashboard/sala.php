@@ -4,237 +4,243 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle de Sala</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .card {
-            margin-top: 20px;
-        }
-        .alert-info {
-            margin-bottom: 20px;
-        }
-        .btn-icon {
-            font-size: 1.2rem;
-            padding: 0.5rem 1rem;
-        }
-        #cronometro-estado {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #333;
-            background-color: #f8f9fa;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 500px;
-            z-index: 1000;
-        }
-        .form-group label {
-            font-weight: bold;
-        }
-        #tiempo-group {
-            display: none;
-        }
-        body {
-            padding-top: 80px; /* Ajuste para evitar solapamiento con el cronómetro fijo */
-        }
+        #contenedor { margin: 10px auto; width: 540px; height: 115px; }
+        .reloj { float: left; font-size: 80px; font-family: Courier, sans-serif; color: #363431; }
+        .disabled { pointer-events: none; opacity: 0.5; }
     </style>
 </head>
 <body>
-
-<div id="cronometro-estado">00:00:00</div>
-
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Detalles de Sala: <?php echo $sala['nombre']; ?></h3>
+<div class="container mt-4">
+    <h3 class="text-center display-4 mt-4">Sala: <?= $sala['nombre']; ?></h3>
+    <form id="formulario">
+        <div class="form-group">
+            <label for="cliente">Cliente:</label>
+            <select id="cliente" class="form-control">
+                <?php foreach ($clientes as $cliente): ?>
+                    <option value="<?= $cliente['id']; ?>"><?= $cliente['nombre']; ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
-        <div class="card-body">
-            <form id="form-cronometro">
-                <input type="hidden" id="sala_id" value="<?php echo $sala['id']; ?>">
-                <div class="form-group">
-                    <label for="cliente">Cliente:</label>
-                    <select id="cliente" name="cliente" class="form-control">
-                        <?php foreach ($clientes as $cliente): ?>
-                            <option value="<?php echo $cliente['id']; ?>"><?php echo $cliente['nombre']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="paquete">Paquete:</label>
-                    <select id="paquete" name="paquete" class="form-control">
-                        <?php foreach ($paquetes as $paquete): ?>
-                            <option value="<?php echo $paquete['id']; ?>" data-precio="<?php echo $paquete['precio_por_hora']; ?>"><?php echo $paquete['nombre']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="modo">Modo:</label>
-                    <select id="modo" name="modo" class="form-control">
-                        <option value="seleccion">Seleccione un modo</option>
-                        <option value="cuenta regresiva">Cuenta Regresiva</option>
-                        <option value="reloj libre">Reloj Libre</option>
-                    </select>
-                </div>
-                <div class="form-group" id="tiempo-group">
-                    <label for="tiempo">Tiempo (en minutos):</label>
-                    <input type="number" id="tiempo" name="tiempo" class="form-control" min="1">
-                </div>
-                <button type="button" id="iniciar" class="btn btn-primary btn-icon">
-                    <i class="fas fa-play"></i> Iniciar Cronómetro
-                </button>
-            </form>
-
-            <hr>
-
-            <h4>Estado del Cronómetro</h4>
-            <button type="button" id="detener" class="btn btn-danger btn-icon">
-                <i class="fas fa-stop"></i> Detener Cronómetro
-            </button>
-            
-            <hr>
-
-            <a href="<?php echo site_url('dashboard'); ?>" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Regresar
-            </a>
+        <div class="form-group">
+            <label for="paquete">Paquete:</label>
+            <select id="paquete" class="form-control">
+                <?php foreach ($paquetes as $paquete): ?>
+                    <option value="<?= $paquete['id']; ?>" data-precio="<?= $paquete['precio_por_hora']; ?>">
+                        <?= $paquete['nombre']; ?> ($<?= $paquete['precio_por_hora']; ?>/hora)
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
+        <div class="form-group">
+            <label for="modo">Modo:</label>
+            <select id="modo" class="form-control">
+                <option value="cronometro">Cronómetro</option>
+                <option value="cuenta_regresiva">Cuenta Regresiva</option>
+            </select>
+        </div>
+        <div id="tiempo-group" class="form-group" style="display: none;">
+            <label for="tiempo">Tiempo (en minutos):</label>
+            <input type="number" id="tiempo" class="form-control" min="1">
+        </div>
+    </form>
+    <div class="container text-center mt-1">
+    <div class="container text-center mt-4">
+    <div id="contenedor" class="d-flex justify-content-center">
+        <div class="reloj display-4" id="Horas">00</div>
+        <div class="reloj display-4" id="Minutos">:00</div>
+        <div class="reloj display-4" id="Segundos">:00</div>
     </div>
 </div>
 
-<!-- Alerta de sonido -->
-<audio id="alerta-sonido" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+    
+    <div class="mt-4">
+        <input type="button" class="btn btn-success mx-2" id="inicio" value="Iniciar" onclick="inicio();">
+        <input type="button" class="btn btn-danger mx-2" id="parar" value="Detener" onclick="parar();" disabled>
+        <input type="button" class="btn btn-warning mx-2" id="continuar" value="Reanudar" onclick="continuar();" disabled>
+        <input type="button" class="btn btn-secondary mx-2" id="reinicio" value="Reiniciar" onclick="reinicio();" disabled>
+    </div>
+</div>
 
+ 
+    <div class="text-center mt-4">
+    <input type="button" class="btn btn-info" id="liberar" value="Liberar Sala" onclick="liberarSala();">
+    <br>
+    <a href="<?php echo site_url('dashboard/index/' . $sala['id']); ?>" class="btn btn-secondary mt-2">
+        <i class="fas fa-sign-in-alt"></i> regresar
+    </a>
+</div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
-$(document).ready(function() {
-    let interval; // Variable global para el intervalo del cronómetro
-
-    $('#modo').change(function() {
-        if ($(this).val() === 'cuenta regresiva') {
-            $('#tiempo-group').show();
-        } else {
-            $('#tiempo-group').hide();
+let control, centesimas = 0, segundos = 0, minutos = 0, horas = 0, tiempoRestante = 0, intervalo = 1000, tiempoInicial, tiempoUltimaActualizacion = Date.now();
+document.getElementById("modo").addEventListener("change", function() {
+    const modo = this.value;
+    document.getElementById("tiempo-group").style.display = (modo === "cuenta_regresiva") ? "block" : "none";
+    reinicio();
+});
+document.addEventListener("DOMContentLoaded", function() {
+    const salaId = "<?= $sala['id']; ?>";
+    const estadoGuardado = JSON.parse(localStorage.getItem("estado_sala_" + salaId));
+    if (estadoGuardado) {
+        centesimas = estadoGuardado.centesimas || 0;
+        segundos = estadoGuardado.segundos || 0;
+        minutos = estadoGuardado.minutos || 0;
+        horas = estadoGuardado.horas || 0;
+        tiempoRestante = estadoGuardado.tiempoRestante || 0;
+        tiempoInicial = estadoGuardado.tiempoInicial || 0;
+        if (estadoGuardado.estado === "iniciado") {
+            const tiempoTranscurrido = Math.floor((Date.now() - estadoGuardado.ultimaActualizacion) / 1000);
+            if (estadoGuardado.modo === "cuenta_regresiva") {
+                tiempoRestante = Math.max(0, tiempoRestante - tiempoTranscurrido);
+            } else {
+                centesimas += (tiempoTranscurrido * 100);
+                while (centesimas >= 100) { centesimas -= 100; segundos++; }
+                while (segundos >= 60) { segundos -= 60; minutos++; }
+            }
         }
-    });
-
-    $('#iniciar').click(function() {
-        const salaId = $('#sala_id').val();
-        const modo = $('#modo').val();
-        let tiempo = $('#tiempo').val();
-        const paqueteSeleccionado = $('#paquete option:selected');
-        const precioPorHora = parseFloat(paqueteSeleccionado.data('precio'));
-
-        if (modo === 'cuenta regresiva' && tiempo === '') {
-            Swal.fire('Error', 'Por favor, ingrese el tiempo.', 'error');
+        document.getElementById("modo").value = estadoGuardado.modo;
+        document.getElementById("tiempo").value = Math.floor(tiempoRestante / 60);
+        document.getElementById("Centesimas").innerHTML = ":" + (centesimas < 10 ? "0" : "") + centesimas;
+        document.getElementById("Segundos").innerHTML = ":" + (segundos < 10 ? "0" : "") + segundos;
+        document.getElementById("Minutos").innerHTML = (minutos < 10 ? "0" : "") + minutos;
+        document.getElementById("Horas").innerHTML = (horas < 10 ? "0" : "") + horas;
+        if (estadoGuardado.estado === "iniciado") {
+            control = setInterval(estadoGuardado.modo === "cuenta_regresiva" ? cronometro : cronometroCronometro, estadoGuardado.modo === "cuenta_regresiva" ? 1000 : 10);
+            bloquearFormulario();
+        }
+    }
+});
+function guardarEstadoSala(estado) {
+    const salaId = "<?= $sala['id']; ?>";
+    const estadoActual = {
+        estado: estado, centesimas: centesimas, segundos: segundos, minutos: minutos, horas: horas,
+        tiempoRestante: tiempoRestante, modo: document.getElementById("modo").value, tiempoInicial: tiempoInicial,
+        ultimaActualizacion: Date.now()
+    };
+    localStorage.setItem("estado_sala_" + salaId, JSON.stringify(estadoActual));
+}
+function bloquearFormulario() {
+    document.getElementById("formulario").classList.add("disabled");
+    document.getElementById("inicio").disabled = true;
+    document.getElementById("liberar").disabled = false;
+    document.getElementById("parar").disabled = false;
+    document.getElementById("reinicio").disabled = false;
+    document.getElementById("continuar").disabled = false;
+}
+function desbloquearFormulario() {
+    document.getElementById("formulario").classList.remove("disabled");
+    document.getElementById("inicio").disabled = false;
+    document.getElementById("liberar").disabled = true;
+}
+function liberarSala() {
+    const salaId = "<?= $sala['id']; ?>";
+    const paqueteSeleccionado = document.getElementById("paquete").selectedOptions[0];
+    const precioPorHora = parseFloat(paqueteSeleccionado.getAttribute("data-precio"));
+    const modoSeleccionado = document.getElementById("modo").value;
+    let tiempoTotalEnHoras;
+    if (modoSeleccionado === "cuenta_regresiva") {
+        const tiempoMinutos = parseInt(document.getElementById("tiempo").value);
+        tiempoTotalEnHoras = tiempoMinutos / 60;
+    } else {
+        const horas = parseInt(document.getElementById("Horas").innerHTML) || 0;
+        const minutos = parseInt(document.getElementById("Minutos").innerHTML.replace(':', '')) || 0;
+        const segundos = parseInt(document.getElementById("Segundos").innerHTML.replace(':', '')) || 0;
+        const tiempoTotalEnSegundos = (horas * 3600) + (minutos * 60) + segundos;
+        tiempoTotalEnHoras = tiempoTotalEnSegundos / 3600;
+    }
+    const costoTotal = (tiempoTotalEnHoras * precioPorHora).toFixed(2);
+    Swal.fire({ title: "Sala finalizada", text: "El costo total es: $" + costoTotal, icon: "success" });
+    parar();
+    reinicioliberar();
+    localStorage.removeItem("estado_sala_" + salaId);
+    document.getElementById("tiempo").value = 0;
+    desbloquearFormulario();
+}
+function inicio() {
+    if (document.getElementById("modo").value === "cuenta_regresiva") {
+        const tiempoMinutos = parseInt(document.getElementById("tiempo").value);
+        if (isNaN(tiempoMinutos) || tiempoMinutos <= 0) {
+            Swal.fire("Por favor, ingrese un tiempo válido.");
             return;
         }
-
-        const fechaInicio = Date.now();
-        const cronometroData = {
-            sala_id: salaId,
-            modo: modo,
-            tiempo_restante: modo === 'cuenta regresiva' ? tiempo * 60 : 0,
-            fecha_inicio: fechaInicio,
-            estado: 'activo',
-            precio_por_hora: precioPorHora
-        };
-
-        localStorage.setItem('cronometro_sala_' + salaId, JSON.stringify(cronometroData));
-
-        bloquearFormulario();
-        iniciarCronometro(modo, cronometroData.tiempo_restante, fechaInicio, salaId);
-    });
-
-    function bloquearFormulario() {
-        $('#form-cronometro input, #form-cronometro select, #iniciar').attr('disabled', true);
+        tiempoRestante = tiempoMinutos * 60; // Aquí asegúrate de que este valor sea en segundos
+        tiempoInicial = tiempoRestante;
+        control = setInterval(cronometro, 1000);
+    } else {
+        control = setInterval(cronometroCronometro, 10);
     }
+    guardarEstadoSala("iniciado");
+    bloquearFormulario();
+    document.getElementById("continuar").disabled = true;
+}
 
-    function habilitarFormulario() {
-        $('#form-cronometro input, #form-cronometro select, #iniciar').attr('disabled', false);
-    }
+function parar() {
+    clearInterval(control);
+    guardarEstadoSala("detenido");
+    document.getElementById("continuar").disabled = false;
+}
+function continuar() {
+    control = setInterval(document.getElementById("modo").value === "cuenta_regresiva" ? cronometro : cronometroCronometro, document.getElementById("modo").value === "cuenta_regresiva" ? 1000 : 10);
+    guardarEstadoSala("iniciado");
+    document.getElementById("continuar").disabled = true;
+}
+function reinicio() {
+    clearInterval(control);
+    centesimas = 0; segundos = 0; minutos = 0; horas = 0; tiempoRestante = 0;
+    document.getElementById("Centesimas").innerHTML = ":00";
+    document.getElementById("Segundos").innerHTML = ":00";
+    document.getElementById("Minutos").innerHTML = "00";
+    document.getElementById("Horas").innerHTML = "00";
+    guardarEstadoSala("detenido");
+    inicio();
+}
+function reinicioliberar() {
+    clearInterval(control);
+    centesimas = 0; segundos = 0; minutos = 0; horas = 0; tiempoRestante = 0;
+    document.getElementById("Centesimas").innerHTML = ":00";
+    document.getElementById("Segundos").innerHTML = ":00";
+    document.getElementById("Minutos").innerHTML = "00";
+    document.getElementById("Horas").innerHTML = "00";
+    guardarEstadoSala("detenido");
+}
+function cronometro() {
+    if (tiempoRestante > 0) {
+        tiempoRestante--;
+        let horas = Math.floor(tiempoRestante / 3600);
+        let min = Math.floor((tiempoRestante % 3600) / 60);
+        let seg = tiempoRestante % 60;
 
-    function iniciarCronometro(modo, tiempoRestante, fechaInicio, salaId) {
-        interval = setInterval(function() {
-            const tiempoTranscurrido = Math.floor((Date.now() - fechaInicio) / 1000);
-
-            if (modo === 'cuenta regresiva') {
-                const tiempoActualizado = tiempoRestante - tiempoTranscurrido;
-                if (tiempoActualizado > 0) {
-                    $('#cronometro-estado').text(formatTime(tiempoActualizado));
-                } else {
-                    clearInterval(interval);
-                    $('#cronometro-estado').text('00:00:00');
-                    mostrarAlertaFinalizacion(salaId);
-                }
-            } else {
-                const tiempoActualizado = tiempoTranscurrido;
-                $('#cronometro-estado').text(formatTime(tiempoActualizado));
-            }
-        }, 1000);
-    }
-
-    function formatTime(seconds) {
-        const horas = Math.floor(seconds / 3600);
-        const minutos = Math.floor((seconds % 3600) / 60);
-        const segundos = seconds % 60;
-        return [horas, minutos, segundos]
-            .map(v => v < 10 ? '0' + v : v)
-            .join(':');
-    }
-
-    function mostrarAlertaFinalizacion(salaId) {
-        const cronometroData = JSON.parse(localStorage.getItem('cronometro_sala_' + salaId));
-        const precioPorHora = cronometroData.precio_por_hora;
-
-        let tiempoTotal;
-        if (cronometroData.modo === 'cuenta regresiva') {
-            // Para cuenta regresiva, calculamos el costo basado en el tiempo ingresado
-            tiempoTotal = cronometroData.tiempo_restante;
-        } else {
-            // Para reloj libre, calculamos el costo basado en el tiempo transcurrido
-            tiempoTotal = Math.floor((Date.now() - cronometroData.fecha_inicio) / 1000); // segundos
-        }
-
-        const tiempoTotalHoras = (tiempoTotal / 3600).toFixed(2);
-        const costoTotal = (precioPorHora * tiempoTotalHoras).toFixed(2);
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Cronómetro detenido',
-            text: `Costo total: $${costoTotal}.`
+        // Actualiza la visualización en el formato correcto
+        document.getElementById("Horas").innerHTML = (horas < 10 ? "0" : "") + horas;
+        document.getElementById("Minutos").innerHTML = ":" + (min < 10 ? "0" : "") + min;
+        document.getElementById("Segundos").innerHTML = ":" + (seg < 10 ? "0" : "") + seg;
+    } else {
+        clearInterval(control);
+        Swal.fire("¡El tiempo se ha agotado!", "", "success").then(() => {
+            liberarSala();
         });
-
-        document.getElementById('alerta-sonido').play();
     }
+    guardarEstadoSala("iniciado");
+}
 
-    function cargarEstadoCronometro() {
-        const salaId = $('#sala_id').val();
-        const cronometroData = JSON.parse(localStorage.getItem('cronometro_sala_' + salaId));
+function cronometroCronometro() {
+    // Este método ya no debería tener centésimas, así que solo ajusta el tiempo
+    segundos++;
+    if (segundos >= 60) { segundos = 0; minutos++; }
+    if (minutos >= 60) { minutos = 0; horas++; }
 
-        if (cronometroData && cronometroData.estado === 'activo') {
-            iniciarCronometro(cronometroData.modo, cronometroData.tiempo_restante, cronometroData.fecha_inicio, salaId);
-        }
-    }
+    document.getElementById("Horas").innerHTML = (horas < 10 ? "0" : "") + horas;
+    document.getElementById("Minutos").innerHTML = ":" + (minutos < 10 ? "0" : "") + minutos;
+    document.getElementById("Segundos").innerHTML = ":" + (segundos < 10 ? "0" : "") + segundos;
+    guardarEstadoSala("iniciado");
+}
 
-    $('#detener').click(function() {
-        clearInterval(interval);
-        const salaId = $('#sala_id').val();
-        mostrarAlertaFinalizacion(salaId);
-        habilitarFormulario();
-        localStorage.removeItem('cronometro_sala_' + salaId);
-    });
-
-    cargarEstadoCronometro();
-});
 </script>
-
 </body>
 </html>

@@ -8,6 +8,7 @@ class Dashboard extends CI_Controller {
         $this->load->model('Sala_model');
         $this->load->model('Clientes_model');
         $this->load->model('Paquetes_model');
+        $this->load->model('Estadisticas_model'); // Añadimos el modelo Estadísticas
     }
 
     public function index() {
@@ -15,6 +16,16 @@ class Dashboard extends CI_Controller {
         $this->load->view('templates/sidebar');
         $this->load->view('dashboard/index', $data);
     }
+    public function actualizar_estado_sala() {
+        $sala_id = $this->input->post('sala_id');
+        $estado = $this->input->post('estado'); // 'ocupado' o 'libre'
+    
+        // Actualizar el estado en la base de datos
+        $this->Sala_model->actualizar_estado($sala_id, $estado);
+    
+        echo json_encode(['status' => 'success']);
+    }
+    
 
     public function sala($id) {
         $data['sala'] = $this->Sala_model->get_sala($id);
@@ -26,7 +37,7 @@ class Dashboard extends CI_Controller {
         $data['clientes'] = $this->Clientes_model->get_all_clients();
         $data['paquetes'] = $this->Paquetes_model->get_all_paquetes();
 
-        // Cargar la vista de la sala con los datos necesarios
+       
         $this->load->view('dashboard/sala', $data);
     }
 
@@ -40,5 +51,21 @@ class Dashboard extends CI_Controller {
         } else {
             echo json_encode(['error' => 'Paquete no encontrado']);
         }
+    }
+
+    // Nueva función para guardar estadísticas al detener el cronómetro
+    public function guardar_estadisticas() {
+        $data = array(
+            'cliente_id'    => $this->input->post('cliente_id'),
+            'paquete_id'    => $this->input->post('paquete_id'),
+            'sala_id'       => $this->input->post('sala_id'),
+            'tipo_reloj'    => $this->input->post('tipo_reloj'),
+            'tiempo_total'  => $this->input->post('tiempo_total'), // en segundos
+            'costo_total'   => $this->input->post('costo_total')  // en formato decimal
+        );
+
+        $this->Estadisticas_model->insertar_estadistica($data);
+
+        echo json_encode(['status' => 'success']);
     }
 }

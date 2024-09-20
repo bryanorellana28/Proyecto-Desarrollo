@@ -3,7 +3,7 @@ class Sala_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
-        $this->load->database();  // Asegwwúrate de cargar la base de datos
+        $this->load->database();  
     }
 
     public function get_all_salas() {
@@ -28,4 +28,9 @@ class Sala_model extends CI_Model {
     public function delete_sala($id) {
         return $this->db->delete('salas', array('id' => $id));
     }
+    public function actualizar_estado($id, $estado) {
+        $this->db->where('id', $id);
+        $this->db->update('salas', ['estadoactual' => $estado]);
+    }
+    
 }
